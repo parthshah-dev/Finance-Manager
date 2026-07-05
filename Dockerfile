@@ -1,4 +1,4 @@
-FROM eclipse-temurin:21-jre
+FROM eclipse-temurin:25-jre
 WORKDIR /app
 COPY target/moneymanager-0.0.1-SNAPSHOT.jar moneymanager-v1.0.jar
 EXPOSE 9090
