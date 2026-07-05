@@ -1,5 +1,6 @@
 package com.example.moneymanager.entity;
 
+import com.example.moneymanager.enums.Type;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

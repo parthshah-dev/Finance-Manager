@@ -18,7 +18,7 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long> {
     List<Expense> findTop5ByProfileIdOrderByDateDesc(Long profileId);
 
     @Query("SELECT SUM(e.amount) FROM Expense e WHERE e.profile.id = :profileId")
-    BigDecimal findTotalExpenseByProfileId(@Param("profileID")Long profileId);
+    BigDecimal findTotalExpenseByProfileId(@Param("profileId")Long profileId);
 
     List<Expense> findByProfileIdAndDateBetweenAndNameContainingIgnoreCase(
             Long profileId,
@@ -33,4 +33,6 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long> {
             LocalDate startDate,
             LocalDate endDate
     );
+
+    List<Expense> findByProfileIdAndDate(Long profileId, LocalDate date);
 }

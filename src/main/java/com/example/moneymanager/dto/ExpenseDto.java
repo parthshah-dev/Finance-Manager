@@ -1,5 +1,6 @@
 package com.example.moneymanager.dto;
 
+import com.example.moneymanager.enums.Type;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

@@ -5,6 +5,7 @@ import com.example.moneymanager.dto.IncomeDto;
 import com.example.moneymanager.dto.RecentTransactionDto;
 import com.example.moneymanager.entity.Income;
 import com.example.moneymanager.entity.Profile;
+import com.example.moneymanager.enums.Type;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -34,10 +35,16 @@ public class DashboardService {
 
         List<RecentTransactionDto> recentTransactions = concat(latestIncomes.stream().map(
                 (income) -> modelMapper.map(income, RecentTransactionDto.class))
-                .peek(dto -> dto.setProfileId(profile.getId())),
+                .peek(dto -> {
+                    dto.setProfileId(profile.getId());
+                    dto.setType(Type.INCOME);
+                }),
                 latestExpenses.stream().map(
                         (expense) -> modelMapper.map(expense, RecentTransactionDto.class))
-                .peek(dto -> dto.setProfileId(profile.getId()))
+                .peek(dto -> {
+                    dto.setProfileId(profile.getId());
+                    dto.setType(Type.EXPENSE);
+                })
         ).sorted((a, b) -> {
             int cmp = a.getDate().compareTo(b.getDate());
             if (cmp == 0) {

@@ -11,6 +11,7 @@ import com.example.moneymanager.repository.ExpenseRepository;
 import com.example.moneymanager.repository.IncomeRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -78,5 +79,20 @@ public class ExpenseService {
         BigDecimal total = expenseRepository.findTotalExpenseByProfileId(profile.getId());
 
         return total != null ? total : BigDecimal.ZERO;
+    }
+
+    public List<ExpenseDto> filterExpenses(LocalDate startDate, LocalDate endDate, String key, Sort sort){
+        Profile profile = profileService.getCurrentProfile();
+
+        List<Expense> expenses = expenseRepository.findByProfileIdAndDateBetweenAndNameContainingIgnoreCase(profile.getId(), startDate, endDate, key, sort);
+        return expenses.stream()
+                .map(expense -> modelMapper.map(expense, ExpenseDto.class))
+                .collect(Collectors.toList());
+    }
+
+    public List<ExpenseDto> getTodayExpenses(Long profileId, LocalDate date){
+        List<Expense> expenses = expenseRepository.findByProfileIdAndDate(profileId, date);
+        return expenses.stream().map((element) -> modelMapper.map(element, ExpenseDto.class))
+                .collect(Collectors.toList());
     }
 }

@@ -9,6 +9,7 @@ import com.example.moneymanager.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.apache.catalina.User;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -32,6 +33,9 @@ public class ProfileService {
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
 
+    @Value("${app.activation.url}")
+    private String activationUrl;
+
     public ProfileDtoResponse registerProfile(ProfileDto profileDto){
         Profile profile = modelMapper.map(profileDto, Profile.class);
 
@@ -45,7 +49,7 @@ public class ProfileService {
         Profile savedProfile = profileRepository.save(profile);
 
         //send activation link
-        String activationLink = "http://localhost:8080/api/v1.0/activate?token=" + savedProfile.getActivationToken();
+        String activationLink = activationUrl + "/api/v1.0/activate?token=" + savedProfile.getActivationToken();
         String subject = "MoneyManager | Profile Activation Email";
         String text = "Activate your profile by clicking the following link: " + activationLink;
         emailService.sendEmail(savedProfile.getEmail(), subject, text);

@@ -10,6 +10,7 @@ import com.example.moneymanager.repository.CategoryRepository;
 import com.example.moneymanager.repository.IncomeRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -77,5 +78,14 @@ public class IncomeService {
         BigDecimal total = incomeRepository.findTotalIncomeByProfileId(profile.getId());
 
         return total != null ? total : BigDecimal.ZERO;
+    }
+
+    public List<IncomeDto> filterIncomes(LocalDate startDate, LocalDate endDate, String key, Sort sort){
+        Profile profile = profileService.getCurrentProfile();
+
+        List<Income> incomes = incomeRepository.findByProfileIdAndDateBetweenAndNameContainingIgnoreCase(profile.getId(), startDate, endDate, key, sort);
+        return incomes.stream()
+                .map(income -> modelMapper.map(income, IncomeDto.class))
+                .collect(Collectors.toList());
     }
 }
