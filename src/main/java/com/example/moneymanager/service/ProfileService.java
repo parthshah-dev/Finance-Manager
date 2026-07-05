@@ -17,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
 import java.util.Optional;
@@ -36,6 +37,10 @@ public class ProfileService {
     @Value("${app.activation.url}")
     private String activationUrl;
 
+    @Value("${app.email.enabled}")
+    private boolean isEmailEnabled;
+
+    @Transactional
     public ProfileDtoResponse registerProfile(ProfileDto profileDto){
         Profile profile = modelMapper.map(profileDto, Profile.class);
 
@@ -44,15 +49,22 @@ public class ProfileService {
             throw new RuntimeException("Email already exists");
         }
 
-        profile.setActivationToken(UUID.randomUUID().toString());
+        if (isEmailEnabled) {
+            profile.setActivationToken(UUID.randomUUID().toString());
+        } else {
+            profile.setIsActive(true);
+        }
+
         profile.setPassword(passwordEncoder.encode(profile.getPassword()));
         Profile savedProfile = profileRepository.save(profile);
 
-        //send activation link
-        String activationLink = activationUrl + "/api/v1.0/activate?token=" + savedProfile.getActivationToken();
-        String subject = "MoneyManager | Profile Activation Email";
-        String text = "Activate your profile by clicking the following link: " + activationLink;
-        emailService.sendEmail(savedProfile.getEmail(), subject, text);
+        if (isEmailEnabled) {
+            //send activation link
+            String activationLink = activationUrl + "/api/v1.0/activate?token=" + savedProfile.getActivationToken();
+            String subject = "MoneyManager | Profile Activation Email";
+            String text = "Activate your profile by clicking the following link: " + activationLink;
+            emailService.sendEmail(savedProfile.getEmail(), subject, text);
+        }
 
         return modelMapper.map(savedProfile, ProfileDtoResponse.class);
     }
