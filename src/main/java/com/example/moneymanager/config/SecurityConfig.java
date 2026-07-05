@@ -38,7 +38,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless for API
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/health", "/status", "/register", "/activate", "/login").permitAll() // Public endpoints
+                        .requestMatchers("/health", "/status", "/register", "/activate", "/login", "/error").permitAll() // Public endpoints
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);

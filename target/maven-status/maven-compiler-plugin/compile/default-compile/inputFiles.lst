@@ -20,6 +20,7 @@ E:\moneymanager\src\main\java\com\example\moneymanager\entity\Expense.java
 E:\moneymanager\src\main\java\com\example\moneymanager\entity\Income.java
 E:\moneymanager\src\main\java\com\example\moneymanager\entity\Profile.java
 E:\moneymanager\src\main\java\com\example\moneymanager\enums\Type.java
+E:\moneymanager\src\main\java\com\example\moneymanager\exception\GlobalExceptionHandler.java
 E:\moneymanager\src\main\java\com\example\moneymanager\MoneymanagerApplication.java
 E:\moneymanager\src\main\java\com\example\moneymanager\repository\CategoryRepository.java
 E:\moneymanager\src\main\java\com\example\moneymanager\repository\ExpenseRepository.java
